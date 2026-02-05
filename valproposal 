@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Anita | Valentine Proposal</title>
+    <meta name="description" content="A modern, minimal Valentine proposal with romantic vibes">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #f8c8dc, #e6d4f7, #f8c8dc, #e6d4f7);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 30px rgba(230, 212, 247, 0.3);
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 3s infinite;
+        }
+        
+        .music-toggle {
+            transition: all 0.3s ease;
+        }
+        
+        .music-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(230, 212, 247, 0.4);
+        }
+        
+        .button-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .yes-button {
+            background: linear-gradient(135deg, #e6d4f7 0%, #d4bff9 100%);
+        }
+        
+        .think-button {
+            background: linear-gradient(135deg, #f8c8dc 0%, #f5b5d3 100%);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 212, 247, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(230, 212, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(230, 212, 247, 0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg font-['Inter'] overflow-hidden">
+    <!-- Background Sparkles -->
+    <div id="sparkles-container" class="fixed inset-0 pointer-events-none"></div>
+    
+    <!-- Music Toggle -->
+    <div class="fixed top-4 right-4 z-20">
+        <button id="musicToggle" class="music-toggle bg-white/20 backdrop-blur-sm rounded-full p-3 text-white/80 hover:text-white">
+            <svg id="musicIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative z-10">
+        <div class="max-w-2xl w-full text-center fade-in">
+            <!-- Main Heading -->
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-['Playfair_Display'] font-semibold text-white mb-6 glow-text slide-in">
+                Anita, will you be my Valentine?
+            </h1>
+            
+            <!-- Subtext -->
+            <p class="text-lg md:text-xl text-white/90 mb-12 max-w-md mx-auto fade-in" style="animation-delay: 0.2s">
+                No pressure 
+            </p>
+            
+            <!-- Buttons Container -->
+            <div id="buttonsContainer" class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12 fade-in" style="animation-delay: 0.4s">
+                <!-- Yes Button -->
+                <button id="yesButton" class="yes-button button-hover text-white font-semibold text-xl py-4 px-12 rounded-full shadow-lg pulse relative overflow-hidden group">
+                    <span class="relative z-10">Yes 😩💜</span>
+                    <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+                </button>
+                
+                <!-- Think Button -->
+                <button id="thinkButton" class="think-button button-hover text-white font-semibold text-xl py-4 px-12 rounded-full shadow-lg relative overflow-hidden group">
+                    <span class="relative z-10">Let me think 🤔</span>
+                    <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+                </button>
+            </div>
+            
+            <!-- Response Message -->
+            <div id="responseMessage" class="mt-8 hidden">
+                <p class="text-2xl md:text-3xl text-white font-['Playfair_Display'] font-semibold glow-text">
+                    Damn I really thought I was about to spend another Valentine's Day alone🥲
+                
+                </p>
+                <p class="text-white/80 mt-4 text-lg">
+                    
+                    You probably just made my week😩
+                    
+                    
+                </p>
+            </div>
+            
+            <!-- Footer Note -->
+            <div class="mt-16 pt-8 border-t border-white/20">
+                <p class="text-white/60 text-sm">
+                    Made with 💜.Your answer will definitely determine what I do on the cursed date of February 14th😗
+                </p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" loop muted>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-687.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Initialize data
+        const sparklesCount = 50;
+        const thinkButtonPositions = [
+            { x: 100, y: 100 },
+            { x: -100, y: 50 },
+            { x: 150, y: -80 },
+            { x: -120, y: -60 },
+            { x: 80, y: -120 }
+        ];
+        let currentThinkPosition = 0;
+        let musicPlaying = false;
+        
+        // Create sparkles
+        function createSparkles() {
+            const container = document.getElementById('sparkles-container');
+            for (let i = 0; i < sparklesCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = `${Math.random() * 100}vw`;
+                sparkle.style.top = `${Math.random() * 100}vh`;
+                sparkle.style.animationDelay = `${Math.random() * 3}s`;
+                sparkle.style.animationDuration = `${2 + Math.random() * 3}s`;
+                container.appendChild(sparkle);
+            }
+        }
+        
+        // Confetti animation
+        function launchConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#e6d4f7', '#f8c8dc', '#ffffff'],
+                shapes: ['circle', 'circle'],
+                scalar: 1.2
+            });
+            
+            // Additional bursts
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#e6d4f7', '#f8c8dc']
+                });
+            }, 250);
+            
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#e6d4f7', '#f8c8dc']
+                });
+            }, 500);
+        }
+        
+        // Move think button playfully
+        function moveThinkButton() {
+            const button = document.getElementById('thinkButton');
+            const container = document.getElementById('buttonsContainer');
+            const pos = thinkButtonPositions[currentThinkPosition];
+            
+            button.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            button.style.transform = `translate(${pos.x}px, ${pos.y}px) rotate(${pos.x * 0.1}deg)`;
+            
+            currentThinkPosition = (currentThinkPosition + 1) % thinkButtonPositions.length;
+            
+            // Reset after 1 second
+            setTimeout(() => {
+                button.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                button.style.transform = 'translate(0, 0) rotate(0deg)';
+            }, 1000);
+        }
+        
+        // Toggle background music
+        function toggleMusic() {
+            const music = document.getElementById('backgroundMusic');
+            const icon = document.getElementById('musicIcon');
+            
+            if (musicPlaying) {
+                music.pause();
+                icon.innerHTML = '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>';
+            } else {
+                music.play().catch(e => console.log("Autoplay prevented:", e));
+                icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+            }
+            
+            musicPlaying = !musicPlaying;
+        }
+        
+        // Handle yes button click
+        function handleYesClick() {
+            const yesButton = document.getElementById('yesButton');
+            const responseMessage = document.getElementById('responseMessage');
+            const buttonsContainer = document.getElementById('buttonsContainer');
+            
+            // Launch confetti
+            launchConfetti();
+            
+            // Hide buttons and show response
+            yesButton.style.animation = 'none';
+            buttonsContainer.style.opacity = '0';
+            buttonsContainer.style.transform = 'scale(0.8)';
+            buttonsContainer.style.transition = 'all 0.5s ease';
+            
+            setTimeout(() => {
+                buttonsContainer.classList.add('hidden');
+                responseMessage.classList.remove('hidden');
+                responseMessage.classList.add('fade-in');
+            }, 500);
+            
+            // Play celebration sound if music is on
+            if (musicPlaying) {
+                const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
+                audio.volume = 10;
+                audio.play().catch(e => console.log("Sound play prevented:", e));
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create background sparkles
+            createSparkles();
+            
+            // Set up event listeners
+            document.getElementById('yesButton').addEventListener('click', handleYesClick);
+            document.getElementById('thinkButton').addEventListener('click', moveThinkButton);
+            document.getElementById('musicToggle').addEventListener('click', toggleMusic);
+            
+            // Add hover effects
+            const buttons = document.querySelectorAll('.button-hover');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.05)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (this.id !== 'thinkButton' || !this.style.transform.includes('translate(')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+            
+            // Add subtle animation to main text
+            const mainText = document.querySelector('h1');
+            setInterval(() => {
+                mainText.style.textShadow = `0 0 ${30 + Math.random() * 10}px rgba(230, 212, 247, ${0.3 + Math.random() * 0.2})`;
+            }, 3000);
+            
+            // Initialize music with user interaction
+            document.body.addEventListener('click', function initMusic() {
+                const music = document.getElementById('backgroundMusic');
+                music.muted = false;
+                music.volume = 0.3;
+                document.body.removeEventListener('click', initMusic);
+            }, { once: true });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            // Reset think button position on resize
+            const thinkButton = document.getElementById('thinkButton');
+            thinkButton.style.transform = 'translate(0, 0) rotate(0deg)';
+        });
+    </script>
+</body>
+</html>
